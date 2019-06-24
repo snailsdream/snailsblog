@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+
+    
+
+    
+
+    <title>msyql的安装：以rpm方式 | snailsdream</title>
+    <meta name="author" content="fan chao">
+    <meta name="version" content="1.0.0">
+    <meta name="keywords" content>
+    <meta name="description" content="在centos上以rpm的方式安装mysql数据库下载在mysql的官网下载rpm的压缩包：https://dev.mysql.com/downloads/mysql/删除mariadb查看系统中是否安装了mariadb，如果有则需要删除123$ rpm -qa|grep mariadbmariadb-libs-5.5.56-2.el7.x86_64删除mariadb1$ rpm -e --nodeps mariadb-libs-5.5.56-2.el7.x86_64安...">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <main class="app">
+        <header class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">snailsdream</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/categories/front-end">
+                <span class="nav-text">前端</span>
+            </a>
+        
+            <a class="nav-item" href="/categories/back-end">
+                <span class="nav-text">后端</span>
+            </a>
+        
+            <a class="nav-item" href="/categories/database">
+                <span class="nav-text">数据库</span>
+            </a>
+        
+            <a class="nav-item" href="/tags">
+                <span class="nav-text">标签</span>
+            </a>
+        
+            <a class="nav-item" href="/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://snailsdream.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载"><span class="toc-number">1.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除mariadb"><span class="toc-number">2.</span> <span class="toc-text">删除mariadb</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装依赖"><span class="toc-number">3.</span> <span class="toc-text">安装依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装mysql"><span class="toc-number">4.</span> <span class="toc-text">安装mysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动mysql"><span class="toc-number">5.</span> <span class="toc-text">启动mysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动mysql-1"><span class="toc-number">6.</span> <span class="toc-text">启动mysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进入mysql"><span class="toc-number">7.</span> <span class="toc-text">进入mysql</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#密码相关"><span class="toc-number">8.</span> <span class="toc-text">密码相关</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用户相关"><span class="toc-number">9.</span> <span class="toc-text">用户相关</span></a></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content"><article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            msyql的安装：以rpm方式
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://snailsdream.github.io/2019/06/24/msyql的安装：以rpm方式/index.html">
+    
+    <i class="icon-calendar"></i>
+    
+    <time datetime="2019-06-24T08:14:22.000Z" itemprop="datePublished">2019-06-24</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag"></i>
+    <a class="article-tag-link" href="/tags/mysql/">mysql</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>在centos上以rpm的方式安装mysql数据库</p>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>在mysql的官网下载rpm的压缩包：<a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">https://dev.mysql.com/downloads/mysql/</a></p>
+<a id="more"></a>
+
+<h2 id="删除mariadb"><a href="#删除mariadb" class="headerlink" title="删除mariadb"></a>删除mariadb</h2><p>查看系统中是否安装了mariadb，如果有则需要删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$ rpm -qa|grep mariadb</span><br><span class="line">mariadb-libs-5.5.56-2.el7.x86_64</span><br></pre></td></tr></table></figure>
+
+<p>删除mariadb</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rpm -e --nodeps mariadb-libs-5.5.56-2.el7.x86_64</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><p>根据系统情况安装mysql所需要的依赖，如若不清楚，在进行mysql安装时会提示缺少什么依赖，再安装也可。<br>以下是本系统所需要的依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum install -y openssl-devel net-tools perl-JSON autoconf</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装mysql"><a href="#安装mysql" class="headerlink" title="安装mysql"></a>安装mysql</h2><p>解压下载的rpm压缩包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ tar -xvf mysql-8.0.15-1.el7.x86_64.rpm-bundle.tar</span><br><span class="line">mysql-community-server-8.0.15-1.el7.x86_64.rpm</span><br><span class="line">mysql-community-client-8.0.15-1.el7.x86_64.rpm</span><br><span class="line">mysql-community-common-8.0.15-1.el7.x86_64.rpm</span><br><span class="line">mysql-community-libs-8.0.15-1.el7.x86_64.rpm</span><br><span class="line">mysql-community-devel-8.0.15-1.el7.x86_64.rpm</span><br><span class="line">mysql-community-test-8.0.15-1.el7.x86_64.rpm</span><br><span class="line">mysql-community-libs-compat-8.0.15-1.el7.x86_64.rpm</span><br><span class="line">mysql-community-embedded-compat-8.0.15-1.el7.x86_64.rpm</span><br></pre></td></tr></table></figure>
+
+<p>依次安装解压出来的文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rpm -ivh mysql-community-&#123;common,libs,libs-compat,client,devel,server,embedded-compat,<span class="built_in">test</span>&#125;-8.0.15-1.el7.x86_64.rpm</span><br></pre></td></tr></table></figure>
+
+<p>在安装过程中可能会提示缺少依赖，这时安装好依赖再来安装即可。如果安装顺序出错了可能导致安装失败，根据提示将所需要安装的提前安装即可。</p>
+<h2 id="启动mysql"><a href="#启动mysql" class="headerlink" title="启动mysql"></a>启动mysql</h2><p>mysql启动之前会初始化数据库，如果/etc/my.cnf配置文件中的datadir有值或不是默认，那么走默认初始化就会出错，这时手动初始化数据库即可,在初始化时指定datadir</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mysqld --initialize --user=root --datadir=/bak/mysql/data</span><br></pre></td></tr></table></figure>
+
+<p><strong><em>注意:</em></strong> 在mysql初始化数据库是会根据配置信息或默认信息去初始化一些属性，这些属性只能在初始化时进行应用，当数据库初始化完成后，这些属性将不能被更改，如: 忽略大小写： lower_case_table_names=1</p>
+<h2 id="启动mysql-1"><a href="#启动mysql-1" class="headerlink" title="启动mysql"></a>启动mysql</h2><p>mysql启动方式有两种：<br>第一种，该方式其实还是走的第二种，它会自动调第二种方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ service mysqld start</span><br></pre></td></tr></table></figure>
+
+<p>第二种：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl start  mysqld.service</span><br></pre></td></tr></table></figure>
+
+<h2 id="进入mysql"><a href="#进入mysql" class="headerlink" title="进入mysql"></a>进入mysql</h2><p>mysql启动完成后，第一次进入系统需要修改密码才能进行数据库的使用，第一次进入需要使用到数据库初始化时生成的临时密码放在日志文件中，查看密码的方式为，如若修改了日志文件的路径、名字则需要在相应的位置进行查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grep <span class="string">'temporary password'</span> /var/<span class="built_in">log</span>/mysqld.log</span><br></pre></td></tr></table></figure>
+
+<p>登录mysql：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mysql -uroot -p</span><br></pre></td></tr></table></figure>
+
+<p>修改默认密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ALTER USER user() IDENTIFIED BY <span class="string">'******'</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="密码相关"><a href="#密码相关" class="headerlink" title="密码相关"></a>密码相关</h2><p>在mysql升级到8.0时，许多软件不支持8.0的用户密码加密方式，这时在创建用户时指定使用mysql_native_password加密方式即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ create user myyser@<span class="string">'%'</span> IDENTIFIED WITH <span class="string">'mysql_native_password'</span> BY <span class="string">'*****'</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="用户相关"><a href="#用户相关" class="headerlink" title="用户相关"></a>用户相关</h2><p>mysql和oracle在用户和数据库的管理上有很大差别，oracle是用户下面存在表、表空间、数据等，而mysql是root用户创建一个database，将database的权限赋予用户，用户再来使用表、数据等。</p>
+<p>创建用户、database、赋权,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ create user myuser@<span class="string">'%'</span> IDENTIFIED  BY <span class="string">'*****'</span>;</span><br><span class="line">$ create database mydatabase;</span><br><span class="line">$ grant all privileges on mydatabase.* to myuser;</span><br></pre></td></tr></table></figure>
+
+
+        
+    </section>
+</article>
+
+
+
+<div class="comments">
+    <div id="comments"></div>
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+    new Gitalk({
+        clientID: "fd4b8ccb049d0ba3db96",
+        clientSecret: "cfd516b9df4adc68675c4cc3108238791c235801",
+        repo: "snailsdream.github.io",
+        owner: "snailsdream",
+        admin: ["snailsdream"],
+        id: "2019/06/24/msyql的安装：以rpm方式",
+        distractionFreeMode: true,
+        title: "msyql的安装：以rpm方式",
+        body: "https://snailsdream.github.io/2019/06/24/msyql的安装：以rpm方式/",
+        labels: ["mysql"]
+    }).render('comments');
+    </script>
+</div>
+
+</div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+            
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle();
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp();
+            }, 3000);
+        }
+    });
+    </script>
+    
+        <script type="text/javascript" src="/js/scrollspy.min.js"></script>
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+        </script>
+    
+
+</body>
+</html>
