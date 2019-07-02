@@ -118,7 +118,7 @@
         
         <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在linux系统运行过程中很容易造成时钟错乱的现象，如果不经常同步那么过一段时间就会发现服务器的时钟和标准时间差异性很大了，这个时候就需要将自身的时钟和服务器的时钟进行同步。这里采用ntp的形式进行同步。</p>
 <a id="more"></a>
-<h2 id="查看时钟状态"><a href="#查看时钟状态" class="headerlink" title="查看时钟状态"></a>查看时钟状态</h2><p>首先查看时钟是否同步的，通过命令<code>timaedatectl</code><br><img src="/.io//timedatectl.png" alt="timedatectl"></p>
+<h2 id="查看时钟状态"><a href="#查看时钟状态" class="headerlink" title="查看时钟状态"></a>查看时钟状态</h2><p>首先查看时钟是否同步的，通过命令<code>timaedatectl</code><br><img src="timedatectl.png" alt="timedatectl"></p>
 <p><code>NTP enabled</code>表示是否开启ntp同步功能，这里默认一般都是开启的如果没有开启则可通过命令<code>timedatectl set-ntp yes</code>来进行开启，<em>开启并不代表就同步了，还需要安装ntp</em><br><code>NTP synchronized</code>表示当前状态的时间是否和时钟服务器的时间同步的，如果是<code>yes</code>表示已经和时钟服务器的时钟同步了。因ntp是平滑同步改变时间，在初次安装运行ntp时该状态会为<code>no</code>，在时钟和服务器同步了后就会变成<code>yes</code></p>
 <h2 id="安装配置ntp"><a href="#安装配置ntp" class="headerlink" title="安装配置ntp"></a>安装配置ntp</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum install ntp</span><br></pre></td></tr></table></figure>
 
