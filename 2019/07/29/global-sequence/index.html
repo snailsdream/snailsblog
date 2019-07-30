@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+
+    
+
+    
+
+    <title>分布式ID生成-全局序列号发生器 | snailsdream</title>
+    <meta name="author" content="fan chao">
+    <meta name="version" content="1.0.0">
+    <meta name="keywords" content>
+    <meta name="description" content="说明在分布式系统中都涉及到全局序列号的问题，网上分布式id生成的核心思路大概有以下几种基于redis的原子操作，java中spring提供了RedisAtomicLong可进行long型的线程安全操作基于mysql的自增主键基于雪花算法Snowflake基于zookeeper的全局id，curator提供了DistributedAtomicLong可进行long型的线程安全操作基于UUID本人以前做过一个java实现的基于Snowflake实现的全局id生成器，当时需求是生成2...">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+    
+    
+    <link rel="icon" href="/images/favicon.ico">
+    
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <main class="app">
+        <header class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">snailsdream</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/categories/front-end">
+                <span class="nav-text">前端</span>
+            </a>
+        
+            <a class="nav-item" href="/categories/back-end">
+                <span class="nav-text">后端</span>
+            </a>
+        
+            <a class="nav-item" href="/categories/database">
+                <span class="nav-text">数据库</span>
+            </a>
+        
+            <a class="nav-item" href="/categories/linux">
+                <span class="nav-text">系统</span>
+            </a>
+        
+            <a class="nav-item" href="/tags">
+                <span class="nav-text">标签</span>
+            </a>
+        
+            <a class="nav-item" href="/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://snailsdream.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#说明"><span class="toc-number">1.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#开始"><span class="toc-number">2.</span> <span class="toc-text">开始</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AtomicLongBufferRepository"><span class="toc-number">3.</span> <span class="toc-text">AtomicLongBufferRepository</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#属性说明"><span class="toc-number">3.1.</span> <span class="toc-text">属性说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法说明"><span class="toc-number">3.2.</span> <span class="toc-text">方法说明</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AtomicLongBuffer"><span class="toc-number">4.</span> <span class="toc-text">AtomicLongBuffer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#属性说明-1"><span class="toc-number">4.1.</span> <span class="toc-text">属性说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法说明-1"><span class="toc-number">4.2.</span> <span class="toc-text">方法说明</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GlobalAtomicLongService"><span class="toc-number">5.</span> <span class="toc-text">GlobalAtomicLongService</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#方法说明-2"><span class="toc-number">5.1.</span> <span class="toc-text">方法说明</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#流程图"><span class="toc-number">6.</span> <span class="toc-text">流程图</span></a></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content"><article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            分布式ID生成-全局序列号发生器
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://snailsdream.github.io/2019/07/29/global-sequence/index.html">
+    
+    <i class="icon-calendar"></i>
+    
+    <time datetime="2019-07-29T06:18:46.000Z" itemprop="datePublished">2019-07-29</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag"></i>
+    <a class="article-tag-link" href="/tags/java/">java</a>, <a class="article-tag-link" href="/tags/redis/">redis</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>在分布式系统中都涉及到全局序列号的问题，网上分布式id生成的核心思路大概有以下几种</p>
+<ol>
+<li>基于redis的原子操作，java中spring提供了<em>RedisAtomicLong</em>可进行<em>long</em>型的线程安全操作</li>
+<li>基于mysql的自增主键</li>
+<li>基于雪花算法<em>Snowflake</em></li>
+<li>基于<em>zookeeper</em>的全局id，<em>curator</em>提供了<em>DistributedAtomicLong</em>可进行<em>long</em>型的线程安全操作</li>
+<li>基于UUID<br>本人以前做过一个java实现的基于<em>Snowflake</em>实现的全局id生成器，当时需求是生成20位的id，主要解决了机器启动时机器id的无法确定的问题，依赖<em>zookeeper</em>。<a href="https://github.com/snailsdream/snowflake-zookeeper" target="_blank" rel="noopener">github地址</a>,在了解到更多的分布式id生成方案后，对分布式id生成又有了新的思路。<a id="more"></a>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1></li>
+</ol>
+<p><em>该文的源代码地址：<a href="https://github.com/snailsdream/snail-globalid" target="_blank" rel="noopener">github地址</a></em><br>该文将基于redis的原子操作，借鉴美团的双缓存策略来实现分布式id生成，以及网上各类的分布式id思路实现了一种分布式id生成实现。该实现有以下特点</p>
+<ol>
+<li>满足分布式id的需求</li>
+<li>通过双buffer策略减少与redis的交互，主要目的是减少与redis交互的io时间。并可实时自动调整缓存的长度。</li>
+<li>通过mysql持久化序列号实现redis的可切换。</li>
+<li>可根据不同序列名取不同的全局id，实现序列的分类。</li>
+<li>可多节点部署提高整体性能以及可用性：多节点部署每个节点都会有各自的双buffer，会造成id不是严格的递增，但整体的id不会出现重复，并且呈现趋势递增。</li>
+<li>可将redis换成zookeeper等其它的原子性的long操作。<br>该实现主要有三个类或接口<em>AtomicLongBufferRepository</em>、<em>AtomicLongBuffer</em>以及<em>GlobalAtomicLongService</em>，下面具体说明各个实现思路以及使用方法。<h1 id="AtomicLongBufferRepository"><a href="#AtomicLongBufferRepository" class="headerlink" title="AtomicLongBufferRepository"></a>AtomicLongBufferRepository</h1>该类是用于实现根据序列名对外提供全局的id。<h2 id="属性说明"><a href="#属性说明" class="headerlink" title="属性说明"></a>属性说明</h2>该类有以下属性</li>
+<li><code>private static final  String DEFAULT_SEQ_NAME = &quot;DEFAULT_WHOLE_SEQUENCE_NAME&quot;;</code> 默认的序列名</li>
+<li><code>private final Map&lt;String, AtomicLongBuffer&gt; pool = new ConcurrentHashMap&lt;&gt;(16);</code> 通过线程安全的<em>ConcurrentHashMap</em>来保存不同序列的缓存</li>
+<li><code>private SequenceMapper mapper;</code> 传给<em>AtomicLongBuffer</em>使用<h2 id="方法说明"><a href="#方法说明" class="headerlink" title="方法说明"></a>方法说明</h2></li>
+<li><code>public long incrementAndGet(String sequenceName)</code> 对外提供的通过序列名获取序列号</li>
+<li><code>public long incrementAndGet()</code>对外提供的默认序列名的序列号，实际上调用<code>public long incrementAndGet(String sequenceName)</code>方法</li>
+<li><code>private AtomicLongBuffer createSequenceIfNotExistAndGet (String sequenceName)</code>内部使用，获取对应序列号的缓存实现类</li>
+<li><code>public Map&lt;String, AtomicLongBuffer&gt; getPool()</code> 获取存储序列的map，主要用于定时检查各个序列缓存使用情况，在缓存快使用完成后进行下一次缓存<h1 id="AtomicLongBuffer"><a href="#AtomicLongBuffer" class="headerlink" title="AtomicLongBuffer"></a>AtomicLongBuffer</h1>该类主要实现的是双buffer策略，通过双buffer来减少io时间提升性能。<h2 id="属性说明-1"><a href="#属性说明-1" class="headerlink" title="属性说明"></a>属性说明</h2></li>
+<li><code>private final Object lock = new Object();</code> 类中使用的锁对象</li>
+<li><code>private String sequenceName;</code> 当前序列名</li>
+<li><code>protected AtomicLong[] buffer =new AtomicLong[]{new AtomicLong(0),new AtomicLong(0)};</code> 缓存对象，每次从这里取id</li>
+<li><code>protected long[] maxIds = new long[]{0,0};</code> 当前缓存阶段id的最大值</li>
+<li><code>protected int[] steps = new int[]{10,10};</code> 缓存的步长</li>
+<li><code>private AtomicBoolean isPerparing = new AtomicBoolean(false);</code>是否正在进行缓存</li>
+<li><code>private AtomicBoolean[] isOks = new AtomicBoolean []{new AtomicBoolean(false),new AtomicBoolean(false)}</code>两个缓存区的状态</li>
+<li><code>private GlobalAtomicLongService atomicLongService;</code> 缓存区的值的获取对象</li>
+<li><code>private int currentIndex=0;</code> 当前所在的缓存区</li>
+<li><code>private LongAdder count = new LongAdder();</code> 计数器，统计缓存周期内的id消耗量，用于计算下一次缓存步长</li>
+<li><code>private SequenceMapper mapper;</code> mybatis的一个mapper，用于查询、更新序列号信息<h2 id="方法说明-1"><a href="#方法说明-1" class="headerlink" title="方法说明"></a>方法说明</h2></li>
+<li><code>public long incrementAndGet()</code> 通过缓存区获取全局id。</li>
+<li><code>public void validateStatus()</code> 校验当前缓存区id使用情况，剩余10%时开始缓存另外一个缓存区</li>
+<li><code>private void startPerpareProgress(int index)</code>  开始缓存指定缓存区</li>
+<li><code>private void storeMaxSequence(long max)</code> 持久化序列号信息到数据库</li>
+<li><code>private void completePrepare(int index)</code> 缓存过程结束<h1 id="GlobalAtomicLongService"><a href="#GlobalAtomicLongService" class="headerlink" title="GlobalAtomicLongService"></a>GlobalAtomicLongService</h1><h2 id="方法说明-2"><a href="#方法说明-2" class="headerlink" title="方法说明"></a>方法说明</h2></li>
+<li><code>long addAndGet(long addValue);</code> 抽象了全局id缓存的获取接口，可将redis实现替换成zookeeper实现获mysql实现</li>
+<li><code>void set(long newValue);</code> 抽象了更新全局id的接口<h1 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h1>整个分布式id的获取以及生成的流程图如下<br><img src="globalid.jpg" alt="流程图"></li>
+</ol>
+
+        
+    </section>
+</article>
+
+
+
+</div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?93003df2833e26953a63279b2f45e5fd";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+            
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle();
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp();
+            }, 3000);
+        }
+    });
+    </script>
+    
+        <script type="text/javascript" src="/js/scrollspy.min.js"></script>
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+        </script>
+    
+
+</body>
+</html>
